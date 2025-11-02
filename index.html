@@ -15,20 +15,20 @@
 <body>
   <div id="map"></div>
 
+  <!-- API tanpa login -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8jDpq7-GkYB7q2vWxyFjSdl1r1xYzM5M"></script>
   <script>
     function initMap() {
-      // Buat peta dengan tampilan SATELLITE
       const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 8,
         center: { lat: -5.5, lng: 138.1 },
         mapTypeId: "satellite"
       });
 
-      // Ganti URL di bawah dengan lokasi file KML kamu di GitHub (versi RAW)
+      // Ganti link berikut dengan RAW link KML kamu
       const kmlUrl = "https://raw.githubusercontent.com/komdigiasmat-alt/btsbakti/main/20230106%20SITE%20PRADRM%20APPROVED.KML";
 
-      const kmlLayer = new google.maps.KmlLayer({
+      new google.maps.KmlLayer({
         url: kmlUrl,
         map: map,
         preserveViewport: false,
