@@ -1,69 +1,42 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Peta BTS Bakti - Mode Satelit</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-omnivore/leaflet-omnivore.min.js"></script>
+  <title>Peta BTS Bakti</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    html, body, #map { height: 100%; margin: 0; padding: 0; }
-    .leaflet-tooltip {
-      background: rgba(255,255,255,0.9);
-      border: 1px solid #d32f2f;
-      color: #d32f2f;
-      border-radius: 4px;
-      padding: 3px 6px;
-      font-weight: bold;
-      font-size: 13px;
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      padding: 0;
     }
   </style>
 </head>
 <body>
   <div id="map"></div>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8jDpq7-GkYB7q2vWxyFjSdl1r1xYzM5M"></script>
   <script>
-    // Inisialisasi peta Asmat
-    var map = L.map('map').setView([-5.5, 138.5], 8);
+    function initMap() {
+      // Buat peta dengan tampilan SATELLITE
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 8,
+        center: { lat: -5.5, lng: 138.1 },
+        mapTypeId: "satellite"
+      });
 
-    // 🛰️ Mode satelit ESRI
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.esri.com/">Esri</a>'
-    }).addTo(map);
+      // Ganti URL di bawah dengan lokasi file KML kamu di GitHub (versi RAW)
+      const kmlUrl = "https://raw.githubusercontent.com/komdigiasmat-alt/btsbakti/main/20230106%20SITE%20PRADRM%20APPROVED.KML";
 
-    // 📍 Ganti URL ini sesuai file KML kamu
-    var kmlUrl = 'https://rawcdn.githack.com/komdigiasmat-alt/btsbakti/main/lokasi.kml';
+      const kmlLayer = new google.maps.KmlLayer({
+        url: kmlUrl,
+        map: map,
+        preserveViewport: false,
+        suppressInfoWindows: false
+      });
+    }
 
-    // 🗼 Ikon tower BTS
-    var towerIcon = L.icon({
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/484/484167.png',
-      iconSize: [36, 36],
-      iconAnchor: [18, 36],
-      popupAnchor: [0, -36]
-    });
-
-    // 🚀 Muat file KML dan tampilkan nama titik
-    omnivore.kml(kmlUrl)
-      .on('ready', function() {
-        map.fitBounds(this.getBounds());
-      })
-      .on('layeradd', function(e) {
-        var layer = e.layer;
-        if (layer.feature && layer.feature.properties && layer.feature.properties.name) {
-          var latlng = layer.getLatLng ? layer.getLatLng() : null;
-          if (latlng) {
-            map.removeLayer(layer);
-            var marker = L.marker(latlng, { icon: towerIcon }).addTo(map);
-            marker.bindTooltip(layer.feature.properties.name, {
-              permanent: true,
-              direction: 'top',
-              offset: [0, -10]
-            }).openTooltip();
-          }
-        }
-      })
-      .addTo(map);
+    window.onload = initMap;
   </script>
 </body>
 </html>
